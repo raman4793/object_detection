@@ -1,0 +1,5 @@
+<config>
+	<modelname>trained_models/new_12_model</modelname>
+	<videosource>p1.mp4</videosource>
+	<cnnmodel>trained_models/safe_unsafe.model</cnnmodel>
+</config>
