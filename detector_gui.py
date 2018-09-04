@@ -5,9 +5,7 @@
 # In conjunction with Tcl version 8.6
 #    Aug 29, 2018 10:54:12 AM IST  platform: Linux
 
-import sys
 import time
-import sqlite3
 
 try:
     from Tkinter import *
@@ -17,50 +15,57 @@ except ImportError:
 
 try:
     import ttk
+
     py3 = False
 except ImportError:
     import tkinter.ttk as ttk
+
     py3 = True
 
 import detector_gui_support
 from detector import Detector
 import cv2
-import config
 import PIL
 from PIL import Image, ImageTk
+
 
 def callback(image):
     shape = (int(top.top.cget("width")), int(top.top.cget("height")))
     # print("Shape", shape)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    image = cv2.resize(image, (640,360))
-    top.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(image))
-    top.playbackcanvas.create_image(0, 0, image = top.photo, anchor = tkinter.NW)
+    image = cv2.resize(image, (640, 360))
+    top.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(image))
+    top.playbackcanvas.create_image(0, 0, image=top.photo, anchor=tkinter.NW)
+
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global val, w, root, top
     root = Tk()
-    top = New_Toplevel (root)
+    top = New_Toplevel(root)
     detector_gui_support.init(root, top)
     root.mainloop()
 
+
 w = None
+
 
 def create_New_Toplevel(root, *args, **kwargs):
     '''Starting point when module is imported by another program.'''
     global w, w_win, rt
     rt = root
-    w = Toplevel (root)
-    top = New_Toplevel (w)
+    w = Toplevel(root)
+    top = New_Toplevel(w)
     detector_gui_support.init(w, top, *args, **kwargs)
     # rt.mainloop()
     return (w, top)
+
 
 def destroy_New_Toplevel():
     global w
     w.destroy()
     w = None
+
 
 class New_Toplevel:
     def __init__(self, top=None):
@@ -69,9 +74,9 @@ class New_Toplevel:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = '#d9d9d9' # X11 color: 'gray85'
-        _ana1color = '#d9d9d9' # X11 color: 'gray85' 
-        _ana2color = '#d9d9d9' # X11 color: 'gray85'
+        _compcolor = '#d9d9d9'  # X11 color: 'gray85'
+        _ana1color = '#d9d9d9'  # X11 color: 'gray85'
+        _ana2color = '#d9d9d9'  # X11 color: 'gray85'
 
         top.geometry("670x440")
         top.title("New Toplevel")
@@ -119,7 +124,7 @@ class New_Toplevel:
         self.pause_button.place(relx=0.50, rely=0.21, height=26, width=100)
         self.pause_button.configure(activebackground="#d9d9d9")
         self.pause_button.configure(command=detector_gui_support.on_pause)
-        self.pause_button.configure(text='''Pause''')        
+        self.pause_button.configure(text='''Pause''')
 
         self.stop_button = Button(self.buttonpane)
         self.stop_button.place(relx=0.66, rely=0.21, height=26, width=100)
@@ -135,7 +140,7 @@ class New_Toplevel:
 
         self.playbackpane = Frame(top)
         self.playbackpane.place(relx=0.02, rely=0.13, relheight=0.83
-                , relwidth=0.96)
+                                , relwidth=0.96)
         self.playbackpane.configure(relief=GROOVE)
         self.playbackpane.configure(borderwidth="2")
         self.playbackpane.configure(relief=GROOVE)
@@ -143,31 +148,29 @@ class New_Toplevel:
 
         self.playbackcanvas = Canvas(self.playbackpane)
         self.playbackcanvas.place(relx=0.0, rely=0.0, relheight=1
-                , relwidth=1)
+                                  , relwidth=1)
         self.playbackcanvas.configure(relief=RIDGE)
         self.playbackcanvas.configure(selectbackground="#c4c4c4")
-      
+
     def restart_video(self):
         self.vid = cv2.VideoCapture(self.current_video_file)
 
     def update(self):
         # print(config.get_video_source())
-        self.count = (self.count + 1) 
+        self.count = (self.count + 1)
         # print(count, count%10)
         if self.started:
             # Get a frame from the video source
             ret, frame = self.vid.read()
             if ret:
-                if self.count%10==0:
+                if self.count % 10 == 0:
                     start_time = time.time()
                     self.detector.predict(frame, callback)
-                    print("Took {} millis".format((time.time()-start_time)*100))
+                    print("Took {} millis".format((time.time() - start_time) * 100))
             else:
                 self.started = False
-            self.top.after(self.delay, self.update)  
+            self.top.after(self.delay, self.update)
+
 
 if __name__ == '__main__':
     vp_start_gui()
-
-
-
