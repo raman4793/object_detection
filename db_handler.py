@@ -12,8 +12,16 @@ def add_history(file_name, label):
 
 
 def get_reviewed_files():
-    return conn.execute("SELECT * FROM {} WHERE reviewed=1".format(_HISTORY_TABLE_NAME))
+    data = []
+    rows = conn.execute("SELECT * FROM {} WHERE reviewed=1".format(_HISTORY_TABLE_NAME))
+    for row in rows:
+        data.append(row)
+    return data
 
 
 def get_reviewable_files():
     return conn.execute("SELECT * FROM {} WHERE reviewed=0".format(_HISTORY_TABLE_NAME))
+
+
+if __name__ == '__main__':
+    get_reviewed_files()
