@@ -13,7 +13,6 @@ from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import img_to_array
 from keras.utils import to_categorical
 from imutils import paths
-import matplotlib.pyplot as plt
 import numpy as np
 import random
 import cv2
@@ -82,4 +81,6 @@ H = model.fit_generator(aug.flow(trainX, trainY, batch_size=BS),
 
 # save the model to disk
 print("[INFO] serializing network...")
-model.save(os.path.join('trained_models', "retrained_{}.model".format(time.time())))
+model_path = os.path.join('trained_models', "retrained_{}.model".format(time.time()))
+config.set_cnn(model_path)
+model.save(model_path)

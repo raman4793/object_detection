@@ -3,6 +3,9 @@
 
 # import the necessary packages
 import os
+
+import config
+
 os.environ['KERAS_BACKEND'] = 'theano'
 import numpy as np
 import cv2
@@ -14,7 +17,7 @@ import math
 class DoubleChecker:
 
     def __init__(self):
-        self.MODEL_NAME = "trained_models/safe_unsafe.model"
+        self.MODEL_NAME = config.get_cnn()
         self.model = load_model(self.MODEL_NAME)
 
     def double_check(self, image, cropbox, use_normalized_coordinates=True):

@@ -1,22 +1,13 @@
-import numpy as np
 import os
-import six.moves.urllib as urllib
-import sys
-import tarfile
+
+import numpy as np
 import tensorflow as tf
-import zipfile
 
-from collections import defaultdict
-from io import StringIO
-from PIL import Image
-
+import config
+import draw
 from utils import label_map_util
 
-from utils import visualization_utils as vis_util
-import draw
 
-import cv2
-import time
 # Globals
 
 class Detector:
@@ -28,7 +19,7 @@ class Detector:
 		self.categories = label_map_util.convert_label_map_to_categories(self.label_map, max_num_classes=self.NUM_CLASSES, use_display_name=True)
 		self.category_index = label_map_util.create_category_index(self.categories)	
 		# What model to download.
-		self.MODEL_NAME = 'trained_models/new_12_model'
+		self.MODEL_NAME = config.get_model()
 
 		# Path to frozen detection graph. This is the actual model that is used for the object detection.
 		self.PATH_TO_CKPT = self.MODEL_NAME + '/frozen_inference_graph.pb'	

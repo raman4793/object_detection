@@ -7,6 +7,8 @@
 
 import time
 
+import config
+
 try:
     from Tkinter import *
 except ImportError:
@@ -87,7 +89,7 @@ class New_Toplevel:
         self.detector = Detector()
         self.started = False
 
-        self.current_video_file = "videos/1.mp4"
+        self.current_video_file = config.get_video_source()
 
         # TODO change this to reflect config changes
         self.vid = cv2.VideoCapture(self.current_video_file)

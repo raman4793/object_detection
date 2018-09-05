@@ -1,5 +1,7 @@
 <config>
-	<modelname>trained_models/new_12_model</modelname>
+	<modelfolder>trained_models</modelfolder>
+	<modelname>new_12_model</modelname>
+	<cnnmodel>safe_unsafe.model</cnnmodel>
+	<videofolder>videos</videofolder>
 	<videosource>p1.mp4</videosource>
-	<cnnmodel>trained_models/safe_unsafe.model</cnnmodel>
 </config>
