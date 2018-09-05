@@ -79,13 +79,35 @@ class Item(Frame):
         self.grid(row=self.row, column=self.column)
 
     def on_verify(self):
-        print("Verify")
+        conn = sqlite3.connect("test.db")
+        query = "UPDATE history SET reviewed=1 WHERE id={}".format(self.id)
+        conn.execute(query)
+        conn.commit()
+        self.reviewed = 1
+        self.set_background()
+        conn.close()
 
     def on_safe(self):
-        pass
+        conn = sqlite3.connect("test.db")
+        query = "UPDATE history SET class_id=1 WHERE id={}".format(self.id)
+        conn.execute(query)
+        conn.commit()
+        self.reviewed = 1
+        self.set_background()
+        conn.close()
+        self.label = 'safe'
+        self.on_verify()
 
     def on_unsafe(self):
-        pass
+        conn = sqlite3.connect("test.db")
+        query = "UPDATE history SET class_id=2 WHERE id={}".format(self.id)
+        conn.execute(query)
+        conn.commit()
+        self.reviewed = 1
+        self.set_background()
+        conn.close()
+        self.label= 'unsafe'
+        self.on_verify()
 
     def on_dontcare(self):
         pass
