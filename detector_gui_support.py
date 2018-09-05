@@ -7,6 +7,7 @@
 
 
 import sys
+import history
 
 try:
     from Tkinter import *
@@ -22,7 +23,9 @@ except ImportError:
     import tkinter.ttk as ttk
     py3 = True
 
-import config    
+import config
+
+_START = False
 
 def on_load_model():
     print('detector_gui_support.on_load_model')    
@@ -56,6 +59,7 @@ def on_pause():
 
 def on_history():
     print('detector_gui_support.on_history')
+    history.HistoryWindow()
     sys.stdout.flush()  
 
 def init(top, gui, *args, **kwargs):

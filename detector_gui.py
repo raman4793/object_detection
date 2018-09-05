@@ -79,7 +79,7 @@ class New_Toplevel:
         _ana2color = '#d9d9d9'  # X11 color: 'gray85'
 
         top.geometry("670x440")
-        top.title("New Toplevel")
+        top.title("Helmet Detector")
         top.configure(highlightcolor="black")
 
         self.count = -1
