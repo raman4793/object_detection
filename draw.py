@@ -24,6 +24,8 @@ STANDARD_COLORS = [
     'AliceBlue', 'Green', 'Blue'
 ]
 
+history_enabled = False
+
 doublechecker = DoubleChecker()
 
 
@@ -69,8 +71,9 @@ def draw_bounding_box_on_image(image,
         (left, right, top, bottom) = (xmin, xmax, ymin, ymax)
 
     label = 'safe' if color == 'Green' else 'unsafe'
-    history = History(1, "history_saver", 1, np.asanyarray(image), (left, right, top, bottom), label)
-    history.start()
+    if history_enabled:
+        history = History(1, "history_saver", 1, np.asanyarray(image), (left, right, top, bottom), label)
+        history.start()
     # add_to_history(image, (left, right, top, bottom), color)
 
     # class_name, tmp_label = doublechecker.double_check(image, box)

@@ -5,85 +5,81 @@
 import os
 os.environ['KERAS_BACKEND'] = 'theano'
 import numpy as np
-import argparse
-import imutils
 import cv2
-import PIL.Image as Image
-import PIL.ImageDraw as ImageDraw
 from keras.preprocessing.image import img_to_array
 from keras.models import load_model
 import math
 
+
 class DoubleChecker:
 
-	def __init__(self):
-		self.MODEL_NAME = "safe_unsafe.model"
-		self.model = load_model(self.MODEL_NAME)
+    def __init__(self):
+        self.MODEL_NAME = "trained_models/safe_unsafe.model"
+        self.model = load_model(self.MODEL_NAME)
 
-	def double_check(self, image, cropbox, use_normalized_coordinates=True):
-		# cv2.imshow("test", image)
-		# cv2.waitKey()		
-		# print(cropbox)
-		cropbox = self.normalize_cropbox(image, cropbox, use_normalized_coordinates)
-		cropped_image = self.crop(image, cropbox)
-		# cv2.imshow("test", cropped_image)
-		# cv2.waitKey()		
-		# print(cropbox)
-		# pre-process the image for classification
+    def double_check(self, image, cropbox, use_normalized_coordinates=True):
+        # cv2.imshow("test", image)
+        # cv2.waitKey()
+        # print(cropbox)
+        cropbox = self.normalize_cropbox(image, cropbox, use_normalized_coordinates)
+        cropped_image = self.crop(image, cropbox)
+        # cv2.imshow("test", cropped_image)
+        # cv2.waitKey()
+        # print(cropbox)
+        # pre-process the image for classification
 
-		try:
-			cropped_image = cv2.resize(cropped_image, (28, 28))
-			# cv2.imshow("test", cropped_image)
-			# cv2.waitKey()			
-			cropped_image = cropped_image.astype("float") / 255.0
-			cropped_image = img_to_array(cropped_image)
-			cropped_image = np.expand_dims(cropped_image, axis=0)
+        try:
+            cropped_image = cv2.resize(cropped_image, (28, 28))
+            # cv2.imshow("test", cropped_image)
+            # cv2.waitKey()
+            cropped_image = cropped_image.astype("float") / 255.0
+            cropped_image = img_to_array(cropped_image)
+            cropped_image = np.expand_dims(cropped_image, axis=0)
 
-			safe, unsafe = self.model.predict(cropped_image)[0]
-			label = "unsafe" if safe > unsafe else "safe"
-			proba = safe if safe > unsafe else unsafe			
-		except:
-			label = "safe"
-			proba = 0.25
-		# print((label, proba))
-		# label = "{}: {:.2f}%".format(label, proba * 100)		
-		return (label, proba)
+            safe, unsafe = self.model.predict(cropped_image)[0]
+            label = "unsafe" if safe > unsafe else "safe"
+            proba = safe if safe > unsafe else unsafe
+        except:
+            label = "safe"
+            proba = 0.25
+        # print((label, proba))
+        # label = "{}: {:.2f}%".format(label, proba * 100)
+        return (label, proba)
 
-	# def normalize_cropbox(self, image, cropbox):
-	# 	draw = ImageDraw.Draw(image)
-	# 	im_width, im_height = image.size
-	# 	ymin, xmin, ymax, xmax = cropbox
-	# 	if use_normalized_coordinates:
-	# 		(left, right, top, bottom) = (xmin * im_width, xmax * im_width,
-	# 	                              ymin * im_height, ymax * im_height)
-	# 	else:
-	# 		(left, right, top, bottom) = (xmin, xmax, ymin, ymax)		
+    # def normalize_cropbox(self, image, cropbox):
+    # 	draw = ImageDraw.Draw(image)
+    # 	im_width, im_height = image.size
+    # 	ymin, xmin, ymax, xmax = cropbox
+    # 	if use_normalized_coordinates:
+    # 		(left, right, top, bottom) = (xmin * im_width, xmax * im_width,
+    # 	                              ymin * im_height, ymax * im_height)
+    # 	else:
+    # 		(left, right, top, bottom) = (xmin, xmax, ymin, ymax)
 
-	# 	return (ymin, xmin, ymax, xmax)
+    # 	return (ymin, xmin, ymax, xmax)
 
-	def normalize_cropbox(self, image, cropbox, use_normalized_coordinates=True):
-		# draw = ImageDraw.Draw(image)
-		im_width, im_height = 1920, 1080
-		ymin, xmin, ymax, xmax = cropbox
-		(left, right, top, bottom) = (xmin * im_width, xmax * im_width,
-		                              ymin * im_height, ymax * im_height)	
+    def normalize_cropbox(self, image, cropbox, use_normalized_coordinates=True):
+        # draw = ImageDraw.Draw(image)
+        im_width, im_height = 1920, 1080
+        ymin, xmin, ymax, xmax = cropbox
+        (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
+                                      ymin * im_height, ymax * im_height)
 
+        return (top, bottom, left, right)
 
-		return (top, bottom, left, right)
-
-	def crop(self, numpy_image, crop_box):
-		# print(crop_box)
-		(top, bottom, left, right) = crop_box
-		top = math.floor(top)
-		bottom = math.floor(bottom)
-		left = math.floor(left)
-		right = math.floor(right)
-		# print("Cropbox ", (top, bottom, left, right))
-		# x1 = int(crop_box[0])-25
-		# y1 = int(crop_box[1])-25
-		# x2 = int(crop_box[2])+25
-		# y2 = int(crop_box[3])+25
-		return numpy_image[top:bottom, left:right]
+    def crop(self, numpy_image, crop_box):
+        # print(crop_box)
+        (top, bottom, left, right) = crop_box
+        top = math.floor(top)
+        bottom = math.floor(bottom)
+        left = math.floor(left)
+        right = math.floor(right)
+        # print("Cropbox ", (top, bottom, left, right))
+        # x1 = int(crop_box[0])-25
+        # y1 = int(crop_box[1])-25
+        # x2 = int(crop_box[2])+25
+        # y2 = int(crop_box[3])+25
+        return numpy_image[top:bottom, left:right]
 
 # # construct the argument parse and parse the arguments
 # ap = argparse.ArgumentParser()
