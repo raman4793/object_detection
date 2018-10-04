@@ -1,10 +1,8 @@
 import os
-
-import cv2
-import tkinter as tk
-from tkinter import *
-from PIL import ImageTk, Image
 import sqlite3
+from tkinter import *
+
+from PIL import ImageTk, Image
 
 REVIEWABLE_SAFE = 'blue'
 REVIEWED_SAFE = 'green'
@@ -18,7 +16,7 @@ class HistoryWindow:
     def __init__(self):
         self.conn = sqlite3.connect("test.db")
         self.item_count = self.conn.execute("SELECT COUNT(*) FROM history;").fetchone()[0]
-        self.top = Tk()
+        self.top = Toplevel()
         self.frame = VerticalScrolledFrame(self.top)
         self.frame.pack(fill=BOTH)
         self.top.geometry("1150x500")
