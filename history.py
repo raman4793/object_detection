@@ -12,6 +12,7 @@ REVIEWED_UNSAFE = 'red'
 class HistoryWindow:
 
     items = []
+    retrain_button = None
 
     def __init__(self):
         self.conn = sqlite3.connect("test.db")
@@ -19,12 +20,13 @@ class HistoryWindow:
         self.top = Toplevel()
         self.frame = VerticalScrolledFrame(self.top)
         self.frame.pack(fill=BOTH)
-        self.top.geometry("1150x500")
+        self.top.geometry("1150x300")
         self.top.title("History")
         self.column_count = 3
 
         # Item(self.top, "history/safe_1536051647.7788084.jpg", 1, 0, 0)
         self.initialize()
+        self.retrain_button = Button(self.top, text="Retrain", command=self.on_retrain).pack()
         self.top.mainloop()
 
     def initialize(self):
@@ -38,6 +40,9 @@ class HistoryWindow:
                 row += 1
                 column = 0
         self.conn.close()
+
+    def on_retrain(self):
+        pass
 
 
 class Item(Frame):
